@@ -57,6 +57,30 @@ module ``about the stock example`` =
 
     [<Koan>]
     let YouGotTheAnswerCorrect() =
-        let result =  __
+
+        // Split row into array
+        let splitCommas (x:string) =
+            x.Split([|','|])
+        
+        // Helper function to convert to a double
+        let toDouble x = 
+            System.Double.Parse x
+        
+        // gets the range bewteen two doubles
+        let getRangeDiff x y = 
+            toDouble x - toDouble y
+
+        // finds the greatest variance between the opening and closing price
+        let getMaxClose = 
+            stockData
+            |> List.map (fun c -> splitCommas(c)) 
+            |> List.tail // Skip the header row
+            |> List.map (fun x -> x.[0], getRangeDiff x.[1] x.[4]) // get the date and the variance range
+            |> Seq.maxBy(fun (date,value) -> abs value) // abs to ensure the absolute value as numbers can be positive or negative
+          
+       
+        let date, value = getMaxClose 
+
+        let result = date
         
         AssertEquality "2012-03-13" result
